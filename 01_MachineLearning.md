@@ -66,7 +66,7 @@ train_X, test_X, train_y, test_y = train_test_split(X, y, test_size=0.25, shuffl
 ```
 
 #### 데이터 표준화
-- features 간의 숫자 차이가 나는 경우 숫자가 큰 특성의 영향이 커지므로 표준화하여 맞추어야 함.
+- features 간의 숫자 차이가 나는 경우 숫자가 큰 특성의 영향이 커지므로 ***표준화***하여 맞추어야 함.
 ```python
 mean = np.mean(train_X, axis=0)
 std = np.std(train_X, axis=0)
