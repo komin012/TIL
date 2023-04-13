@@ -366,4 +366,49 @@ print(f'GBM 학습시간 : {time.time() - start_time:.2f}초')
 
 plot_importance(g_cv.best_estimator_, cancer.feature_names, 10)
 
+# ### XGBoost(eXtra Gradient Boost)
 
+# **XGBoost 장점**
+# - 뛰어난 예측 성능
+# - GBM 대비 빠른 수행 시간
+# - 과적합 규제 
+#     - 조기 중단(Early Stopping Rule)
+#         - early_stoppings : 피용 평가 지표가 감소하지 않는 최대 반복 횟수
+#         - eval_metric : 반복 수행시 사용하는 비용 평가 지표
+#         - eval_set : 평가를 수행하는 별도의 검증 데이터 세트
+# - 가지치기 (pruning)
+# - 교차 검증 내장
+# - 결측값 자체 처리
+
+from xgboost import XGBClassifier
+
+# +
+xgb_clf = XGBClassifier(n_estimators=400, learning_rate=0.05, max_depth=3, eval_metric='logloss')
+
+fit_pred_eval(xgb_clf, X_train, X_test, y_train, y_test)
+# -
+
+plot_importance(xgb_clf, cancer.feature_names, 10)
+
+# #### early_stopping = 10 으로 설정하고 재학습/예측/평가
+
+# +
+# 훈련/검증용 데이터 분할
+X_tr, X_val, y_tr, y_val = train_test_split(X_train, y_train, test_size=0.1, random_state=205)
+
+# 훈련
+evals = [(X_tr, y_tr), (X_val, y_val)]
+xgb_clf.fit(X_tr, y_tr, early_stopping_rounds=10, eval_set=evals, verbose=True)
+### 평가지표인 log loss에서 같은 값이 50번 반복되면 중단
+### verbose : 중간과정보여주기
+
+# +
+pred10 = xgb_clf.predict(X_test)
+pred_proba10 = xgb_clf.predict_proba(X_test)[:,1]
+
+get_eval_score(y_test, pred10, pred_proba10)
+# -
+
+# -> 전체로 돌린 xgboost보다 조기중단한 xgboost의 정확도가 떨어짐 (조기중단으로 인한 과소적합 가능성 있음)
+
+plot_importance(xgb_clf, cancer.feature_names, 10)
