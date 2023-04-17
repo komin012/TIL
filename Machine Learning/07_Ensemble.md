@@ -15,6 +15,7 @@
     - 일반적으로 소프트 보팅이 예측 성능이 좋아서 더 많이 사용
 
 ![voting](data/image/voting.png)
+출처: 파이썬 머신러닝 완벽 가이드
 
 ## 2. 배깅(Bagging)
 - 샘플을 여러번 뽑아 각 모델을 학습시켜 결과물을 집계하는 방법
@@ -30,6 +31,7 @@
     - 랜덤포레스트
 
 ![bagging](data/image/bagging.png)
+https://en.wikipedia.org/wiki/Bootstrap_aggregating
 
 ## 3. 부스팅(Boosting)
 - 여러 개의 예측기가 순차적으로 학습을 수행
@@ -69,5 +71,5 @@
 - 교차검증(CV)으로 개별 모델이 예측한 데이터를 다시 메타 데이터세트로 사용하여 최종 모델 meta learner에서 학습하는 방식
 - base learner에서 동일한 데이터 원본을 가지고 학습하게 되면 과적합 문제가 발생
 ![stacking](data/image/stacking.png)
-
+https://www.analyticsvidhya.com/blog/2021/08/ensemble-stacking-for-machine-learning-and-deep-learning/
 

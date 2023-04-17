@@ -93,7 +93,9 @@ from sklearn.metrics import f1_score
 
 ## AUC
 - ROC 곡선 아래 면적
-- ![auc](data/image/auc.png)
+- ![auc](https://upload.wikimedia.org/wikipedia/commons/6/63/Basic_AUC_annotated.png)
+https://en.wikipedia.org/wiki/Partial_Area_Under_the_ROC_Curve
+
 - 대각선의 직선에 대응되면 0.5
 - 1에 가까울수록 좋음
 ```python
