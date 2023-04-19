@@ -84,5 +84,5 @@ $(\hat{θ}) = (X^TX)^{-1}X^Ty$<br>
 $\hat{y} = X\hat{θ}$
 
 $y=ax+b+e$ <br>
-    -> $\hat{b} = $<br>
-    -> $\hat{a}$
+    -> $\hat{b} = \frac{\sum(x_i-\hat{x})(y_i-\bar{y})}{\sum(x_i-\bar(x))^2}$<br>
+    -> $\hat{a} = \bar{y} - \hat{b}\bar{x}$
