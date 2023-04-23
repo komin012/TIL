@@ -340,4 +340,104 @@ plt.show()
 
 # ## 예제3. 이미지 압축
 
+fruits = np.load('data/fruits_300.npy')
+fruits.shape ## 3차원(100x100 배열이 300개)
 
+fruits[0].shape
+
+# - 이미지 출력
+
+# +
+rows=30
+cols=10
+    
+fig, axs = plt.subplots(figsize=(cols, rows), nrows=rows, ncols=cols)
+for i in range(rows):
+    for j in range(cols):
+        axs[i][j].imshow(fruits[j+i*cols], cmap='gray_r')
+        axs[i][j].axis('off')
+plt.show()
+# -
+
+fruits_2d = fruits.reshape(-1, 100*100) ## 2차원으로 변경 (사진 한 행에 픽셀들을 열로)
+fruits_2d.shape
+
+# ### PCA를 적용하여 분류 성능 예측, 시각화
+# - RandomForestClassifier, LogisticRegression 두 가지로 성능 확인
+# - n_components = 50
+
+pca = PCA(n_components=50)
+pca.fit(fruits_2d)
+pca.components_.shape
+
+# => fit만 하면 주성분만 찾아낸 거
+
+# +
+pca_comp = pca.components_.reshape(-1, 100, 100)
+
+rows, cols = 5, 10
+
+fig, axs = plt.subplots(figsize=(cols, rows), nrows=rows, ncols=cols)
+for i in range(rows):
+    for j in range(cols):
+        axs[i][j].imshow(pca_comp[j+i*cols], cmap='gray_r')
+        axs[i][j].axis('off')
+plt.show()
+# -
+
+fruit_pca = pca.transform(fruits_2d)
+fruit_pca.shape
+
+# => transform하면 실제 데이터에 적용
+
+# #### 차원 변환한 데이터를 다시 원래대로 돌려놓기
+
+fruit_inverse = pca.inverse_transform(fruit_pca)
+fruit_inverse.shape
+
+# +
+fruit_inverse = fruit_inverse.reshape(-1, 100, 100)
+
+rows=30
+cols=10
+    
+fig, axs = plt.subplots(figsize=(cols, rows), nrows=rows, ncols=cols)
+for i in range(rows):
+    for j in range(cols):
+        axs[i][j].imshow(fruit_inverse[j+i*cols], cmap='gray_r')
+        axs[i][j].axis('off')
+plt.show()
+# -
+
+# => 약간의 잡음은 생겼지만 거의 복원됨
+
+# #### RandomForestClassifier, LogisticRegression 모델
+
+from sklearn.linear_model import LogisticRegression
+
+y = np.array([0]*100+[1]*100+[2]*100)
+
+# +
+rf_clf = RandomForestClassifier(random_state=205)
+lr_clf = LogisticRegression()
+
+for model in [rf_clf, lr_clf]:
+    scores = cross_val_score(model, fruit_pca, y, cv=3)
+    print(f'## {model.__class__.__name__} ##')
+    print(scores)
+    print(np.mean(scores))
+    print()
+# -
+
+# #### 원본데이터로 모델 돌려보기
+
+# +
+rf_clf = RandomForestClassifier(random_state=205)
+lr_clf = LogisticRegression()
+
+for model in [rf_clf, lr_clf]:
+    scores = cross_val_score(model, fruits_2d, y, cv=3)
+    print(f'## {model.__class__.__name__} ##')
+    print(scores)
+    print(np.mean(scores))
+    print()
